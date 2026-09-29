@@ -1,0 +1,20 @@
+services:
+  recovery-api:
+    build: .
+    image: recovery-planning-api:latest
+    container_name: recovery-planning-api
+    ports:
+      - "8080:8000"
+    environment:
+      RECOVERY_DB: /data/recovery.db
+    volumes:
+      - recovery-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  recovery-data:
